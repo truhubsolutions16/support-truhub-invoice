@@ -1,12 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { loadState } from '../lib/storage'
-import { Invoice } from '../types'
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function Dashboard(): JSX.Element {
   const state = loadState()
-  const invoices = Object.values(state.invoices || {}) as Invoice[]
-  const total = invoices.reduce((s, i) => s + (i.total || 0), 0)
+  const invoices = Object.values(state.invoices || {})
+  const total = invoices.reduce((s: any, i: any) => s + (i.total || 0), 0)
+  const chartData = invoices.slice(-7).map((inv: any, idx: number) => ({ name: `Inv ${idx+1}`, value: inv.total || 0 }))
   return (
     <div>
       <div className="grid md:grid-cols-3 gap-4">
@@ -26,25 +26,17 @@ export default function Dashboard(): JSX.Element {
 
       <div className="mt-6 p-6 bg-white rounded-2xl shadow">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold">Recent Invoices</h3>
-          <Link to="/invoices/new" className="px-3 py-2 bg-primary text-white rounded">New Invoice</Link>
+          <h3 className="text-lg font-semibold">Revenue (recent)</h3>
         </div>
-        <div className="mt-4">
-          {invoices.length === 0 && <div className="text-gray-500">No invoices yet</div>}
-          {invoices.map((inv) => (
-            <div key={inv.id} className="py-2 border-b">
-              <div className="flex justify-between">
-                <div>
-                  <div className="font-medium">{inv.number}</div>
-                  <div className="text-sm text-gray-500">{inv.clientName}</div>
-                </div>
-                <div className="text-right">
-                  <div>₹{inv.total.toFixed(2)}</div>
-                  <div className="text-sm text-gray-500">{inv.date}</div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="mt-4 h-48">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="value" stroke="#2563eb" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

@@ -1,10 +1,14 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, FileText, Settings } from 'lucide-react'
+import { Home, FileText, FilePlus, Users, Box, Settings } from 'lucide-react'
 
 const nav = [
   { name: 'Dashboard', to: '/', icon: Home },
-  { name: 'Invoices', to: '/invoices', icon: FileText }
+  { name: 'Invoices', to: '/invoices', icon: FileText },
+  { name: 'Quotes', to: '/quotes', icon: FilePlus },
+  { name: 'Customers', to: '/customers', icon: Users },
+  { name: 'Products', to: '/products', icon: Box },
+  { name: 'Settings', to: '/settings', icon: Settings }
 ]
 
 export default function Sidebar(): JSX.Element {
